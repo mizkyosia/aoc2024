@@ -1,4 +1,6 @@
 
+use std::collections::HashMap;
+
 use crate::Solution;
 
 pub fn solve(input: String) -> Solution {
@@ -7,30 +9,40 @@ pub fn solve(input: String) -> Solution {
         .map(|l| l.split_terminator("   ").collect())
         .collect();
 
-    let mut val1: Vec<i32> = Vec::new();
-    let mut val2: Vec<i32> = Vec::new();
+    let mut left: Vec<i32> = Vec::new();
+    let mut right: Vec<i32> = Vec::new();
 
     for line in lines {
-        val1.push(line[0].parse().unwrap());
-        val2.push(line[1].parse().unwrap());
+        left.push(line[0].parse().unwrap());
+        right.push(line[1].parse().unwrap());
     }
 
-    let mut nb = 0;
+    let mut res1 = 0;
 
-    val1.sort();
-    val2.sort();
+    left.sort();
+    right.sort();
 
-    for i in 0..val1.len() {
-        nb += (val1[i] - val2[i]).abs();
+    for i in 0..left.len() {
+        res1 += (left[i] - right[i]).abs();
     }
 
     // ------------------------- PART 2 -------------------------
 
-    let res = val1
+    let mut cache:HashMap<i32, i32> = HashMap::new();
+
+    let res2 = left
         .iter()
-        .map(|x| *x * val2.iter().filter(|y| **y == *x).count() as i32)
+        .map(|x| {
+            if let Some(y) = cache.get(x) {
+                *x * *y
+            } else {
+                let y = right.iter().filter(|y| **y == *x).count() as i32;
+                cache.insert(*x, y);
+                *x * y
+            }
+        })
         .reduce(|x, y| x + y)
         .unwrap();
 
-    Solution(nb.to_string(), res.to_string())
+    Solution(res1.to_string(), res2.to_string())
 }
