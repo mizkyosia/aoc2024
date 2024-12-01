@@ -1,6 +1,4 @@
 
-use std::collections::HashMap;
-
 use crate::Solution;
 
 pub fn solve(input: String) -> Solution {
@@ -28,19 +26,9 @@ pub fn solve(input: String) -> Solution {
 
     // ------------------------- PART 2 -------------------------
 
-    let mut cache:HashMap<i32, i32> = HashMap::new();
-
     let res2 = left
         .iter()
-        .map(|x| {
-            if let Some(y) = cache.get(x) {
-                *x * *y
-            } else {
-                let y = right.iter().filter(|y| **y == *x).count() as i32;
-                cache.insert(*x, y);
-                *x * y
-            }
-        })
+        .map(|x| *x * right.iter().filter(|y| **y == *x).count() as i32)
         .reduce(|x, y| x + y)
         .unwrap();
 
