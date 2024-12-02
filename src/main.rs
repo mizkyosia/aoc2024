@@ -9,7 +9,7 @@ pub use util::*;
 const BASE_PATH:&str = "/home/mizkyosia/Projects/aoc2024/src/inputs/day";
 
 fn main() {
-    let items: Vec<String> = (1..=1).map(|x| format!("Day {:02}", x)).collect();
+    let items: Vec<String> = (1..=2).map(|x| format!("Day {:02}", x)).collect();
 
     let mut day: Option<usize> = None;
     let mut first = true;
@@ -40,12 +40,14 @@ fn main() {
 
         day = Select::with_theme(&ColorfulTheme::default()).with_prompt("\n\nChoose a day (or q to exit) :").items(&items).interact_opt().unwrap();   
     }
+    println!("Error :(");
 
 }
 
 fn get_day(day:u8) -> AoCFunction {
     match day {
         1 => calendar::day1::solve,
+        2 => calendar::day2::solve,
         _ => unimplemented!()
     }
 }
