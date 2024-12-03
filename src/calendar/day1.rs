@@ -1,12 +1,7 @@
 
-use std::env;
-
 use crate::Solution;
 
 pub fn solve(input: String) -> Solution {
-    let args = env::args();
-    
-
     let lines: Vec<Vec<&str>> = input
         .split_terminator('\n')
         .map(|l| l.split_terminator("   ").collect())
