@@ -9,13 +9,13 @@ pub use util::*;
 const BASE_PATH:&str = "/home/mizkyosia/Projects/aoc2024/src/inputs/day";
 
 fn main() {
-    let items: Vec<String> = (1..=2).map(|x| format!("Day {:02}", x)).collect();
+    let items: Vec<String> = (1..=3).map(|x| format!("Day {:02}", x)).collect();
 
     let mut day: Option<usize> = None;
     let mut first = true;
 
     loop {
-        print!("\x1B[2J\x1B[1;1H");
+        // print!("\x1B[2J\x1B[1;1H");
         
         if let Some(day) = day {
             let day = day as u8 + 1;
@@ -48,6 +48,7 @@ fn get_day(day:u8) -> AoCFunction {
     match day {
         1 => calendar::day1::solve,
         2 => calendar::day2::solve,
+        3 => calendar::day3::solve,
         _ => unimplemented!()
     }
 }
