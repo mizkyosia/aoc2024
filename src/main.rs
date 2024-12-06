@@ -9,7 +9,7 @@ pub use util::*;
 const BASE_PATH: &str = "/home/mizkyosia/Projects/aoc2024/src/inputs/day";
 
 fn main() {
-    let items: Vec<String> = (1..=5).map(|x| format!("Day {:02}", x)).collect();
+    let items: Vec<String> = (1..=6).map(|x| format!("Day {:02}", x)).collect();
 
     let mut day: Option<usize> = None;
     let mut first = true;
