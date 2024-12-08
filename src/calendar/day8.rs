@@ -1,36 +1,70 @@
+use std::collections::HashSet;
 
 use crate::Solution;
 
 pub fn solve(input: String) -> Solution {
-    let lines: Vec<Vec<&str>> = input
-        .split_terminator('\n')
-        .map(|l| l.split_terminator("   ").collect())
-        .collect();
+    let mut width = 0;
+    let mut height = 0;
+    let mut nodes: Vec<(i32, i32, &str)> = Vec::new();
 
-    let mut left: Vec<i32> = Vec::new();
-    let mut right: Vec<i32> = Vec::new();
+    input.split_terminator('\n').for_each(|l| {
+        width = 0;
+        l.split_terminator("").for_each(|a| {
+            if a != "" {
+                if a != "." && a != "" {
+                    nodes.push((width, height, a));
+                }
+                width += 1;
+            }
+        });
+        height += 1;
+    });
 
-    for line in lines {
-        left.push(line[0].parse().unwrap());
-        right.push(line[1].parse().unwrap());
+    let mut antinodes_1: HashSet<(i32, i32)> = HashSet::new();
+    let mut antinodes_2: HashSet<(i32, i32)> = HashSet::new();
+
+    for i in 0..nodes.len() {
+        for j in (i + 1)..nodes.len() {
+            if nodes[i].2 != nodes[j].2 {
+                continue;
+            }
+
+            let offset_x = nodes[j].0 - nodes[i].0;
+            let offset_y = nodes[j].1 - nodes[i].1;
+
+            let mut k = 0;
+
+            while nodes[i].0 - offset_x * k < width
+                && nodes[i].0 - offset_x * k >= 0
+                && nodes[i].1 - offset_y * k < height
+                && nodes[i].1 - offset_y * k >= 0
+            {
+                let node = (nodes[i].0 - offset_x * k, nodes[i].1 - offset_y * k);
+                if k == 1 {
+                    antinodes_1.insert(node);
+                }
+                antinodes_2.insert(node);
+                k += 1;
+            }
+
+            k = 0;
+
+            while nodes[j].0 + offset_x * k < height
+                && nodes[j].0 + offset_x * k >= 0
+                && nodes[j].1 + offset_y * k < height
+                && nodes[j].1 + offset_y * k >= 0
+            {
+                let node = (nodes[j].0 + offset_x * k, nodes[j].1 + offset_y * k);
+                if k == 1 {
+                    antinodes_1.insert(node);
+                }
+                antinodes_2.insert(node);
+                k += 1;
+            }
+        }
     }
 
-    let mut res1 = 0;
-
-    left.sort();
-    right.sort();
-
-    for i in 0..left.len() {
-        res1 += (left[i] - right[i]).abs();
-    }
-
-    // ------------------------- PART 2 -------------------------
-
-    let res2 = left
-        .iter()
-        .map(|x| *x * right.iter().filter(|y| **y == *x).count() as i32)
-        .reduce(|x, y| x + y)
-        .unwrap();
-
-    Solution(res1.to_string(), res2.to_string())
+    Solution(antinodes_1.len().to_string(), antinodes_2.len().to_string())
 }
+
+// 375 : too high
